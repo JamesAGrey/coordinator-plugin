@@ -1,7 +1,7 @@
 .clear2 {clear:both; font-size:1px; visibility:hidden;}
 
 #side-panel {
-	position: absolute;
+	position: relative;
 }
 
 /*ui-tabs css*/
