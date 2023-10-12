@@ -48,8 +48,7 @@
 			// from coordinator-utils.js
 			optimized4NetworkTransmission(rootNode);
 			patchUpTreeNode(jstreeInst, rootNode);
-			var jsonString = Object.toJSON(rootNode);
-			$('#execPlanJsonStrInput').val(jsonString);
+			$('#execPlanJsonStrInput').val(JSON.stringify(rootNode));
 			$('form[name="parameters"]').submit();
 		})
 		

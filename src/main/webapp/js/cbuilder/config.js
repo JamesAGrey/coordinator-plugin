@@ -98,7 +98,7 @@
 			// buildFormTree(xxx){...  jsonElement.value = Object.toJSON(form.formDom); ...}
 			// though method name is `toJSON` it actually return a string for a JSON representative
 
-			{idNameMap: Object.toJSON({foo:'bar'})})
+			{idNameMap: JSON.stringify({foo:'bar'})})
 			.done(function( data, textStatus, jqXHR ) {
 				//console.info(data);
 			})
@@ -335,9 +335,7 @@
 			// Don't use json.js JSON.stringify! 
 			// Here we align with Jenkins convention Prototype.js
 			// This Object.toJSON method is defined in Prototype.js within jenkins package
-			var jsonString = Object.toJSON(rootNode);
-			
-			execPlanJsonStrInput.val(jsonString);
+			execPlanJsonStrInput.val(JSON.stringify(rootNode));
 		}
 		
 		// submit seizure
@@ -366,12 +364,12 @@
 					formJsonDom.builder.executionPlan = jsonString;
 				}
 				// execPlanJsonStr not yet collected, but data in form has, we need to patch up
-				jsonElement.val(Object.toJSON(formJsonDom));
+				jsonElement.val(JSON.stringify(formJsonDom));
 			}
 			return true;
 		});
 		// handle the situation if the apply button clicked 
-		Event.observe(form.get(0), "jenkins:apply", saveExecPlanJsonString);
+		form.get(0).addEventListener("jenkins:apply", saveExecPlanJsonString);
 		
 		// Avoid incidently typing "Enter" will trigger submit event in the config page
 		var timeoutRef = setTimeout(function removeFormKeyPressedListeners(){
