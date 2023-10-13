@@ -33,13 +33,14 @@ mvn dependency:resolve -Dclassifier=javadoc
 
 mvn clean
 
-# doc in https://wiki.jenkins-ci.org/display/JENKINS/Hosting+Plugins
+# refer to doc in https://www.jenkins.io/doc/developer/publishing/releasing-manually/
+# to get your password encrypted
 # diff account settings use below, in  ~/.m2/settings.xml or $MAVEN_HOME/conf/settings.xml
   <servers>
     <server>
       <id>maven.jenkins-ci.org</id> <!-- For parent 1.397 or newer; before this use id java.net-m2-repository -->
       <username>ace_jl_han</username>  
-      <password>regular_freq_simple_ones</password> 
+      <password>YOUR_ENCRYPTED_PASSWORD</password> 
     </server>
   </servers>
 
@@ -48,6 +49,5 @@ mvn clean
 
 mvn release:prepare release:perform -Dusername=... -Dpassword=...
 
-
 1. mvn release:prepare release:perform -Dusername=... -Dpassword=...
-2. then merge on github branches including develop, master (DON'T manually merge! DON'T git flow release finish)
+2. release version and next new development version will be  interactively prompted during the process
