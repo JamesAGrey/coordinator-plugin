@@ -10,7 +10,7 @@
 
 	<artifactId>coordinator</artifactId>
 	<packaging>hpi</packaging>
-	<version>1.4.1-SNAPSHOT</version>
+	<version>1.5.0</version>
 	<name>Coordinator Plugin</name>
 	<url>https://wiki.jenkins-ci.org/display/JENKINS/Coordinator</url>
 
@@ -36,7 +36,7 @@
 		<connection>scm:git:git@github.com:jenkinsci/coordinator-plugin</connection>
 		<developerConnection>scm:git:git@github.com:jenkinsci/coordinator-plugin</developerConnection>
 		<url>https://github.com/jenkinsci/coordinator-plugin</url>
-	  	<tag>HEAD</tag>
+	  	<tag>coordinator-1.5.0</tag>
   	</scm>
 	<!-- save the effort that configuration in %MAVEN_HOME%/conf/settings.xml -->
 	<repositories>
