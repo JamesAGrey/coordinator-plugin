@@ -33,8 +33,8 @@
   	</issueManagement>
   
 	<scm>
-		<connection>scm:git:https://github.com/jenkinsci/coordinator-plugin.git</connection>
-		<developerConnection>scm:git:https://github.com/jenkinsci/coordinator-plugin.git</developerConnection>
+		<connection>scm:git:git@github.com:jenkinsci/coordinator-plugin</connection>
+		<developerConnection>scm:git:git@github.com:jenkinsci/coordinator-plugin</developerConnection>
 		<url>https://github.com/jenkinsci/coordinator-plugin</url>
 	  	<tag>HEAD</tag>
   	</scm>
