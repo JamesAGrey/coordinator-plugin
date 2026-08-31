@@ -10,9 +10,34 @@
 
 	<artifactId>coordinator</artifactId>
 	<packaging>hpi</packaging>
-	<version>1.5.1-SNAPSHOT</version>
+	<version>1.5.2-SNAPSHOT</version>
 	<name>Coordinator Plugin</name>
 	<url>https://wiki.jenkins-ci.org/display/JENKINS/Coordinator</url>
+
+	<properties>
+		<!-- The parent pom asks for Java 7. JDK 21 refuses to compile that
+		     and stops with "Source option 7 is no longer supported".
+		     Java 8 is the oldest level JDK 21 still accepts. -->
+		<java.level>8</java.level>
+
+		<!-- This check confirms the code only calls Java 8 APIs. It reads class
+		     files with a 2014 copy of ASM that does not understand the newer
+		     build tools above and fails with IllegalArgumentException.
+		     Jenkins 2.579 needs Java 17 or newer anyway, so the check no longer
+		     tells us anything useful. -->
+		<animal.sniffer.skip>true</animal.sniffer.skip>
+
+		<!-- The javadoc tool from 2014 looks for the javadoc program where
+		     JDK 8 kept it, and JDK 21 puts it elsewhere, so it stops the build.
+		     Javadoc is not part of the plugin file that Jenkins loads.
+		     Without this line the build only works when -DskipTests is passed,
+		     because that flag happens to turn javadoc off as a side effect. -->
+		<maven.javadoc.skip>true</maven.javadoc.skip>
+
+		<!-- Findbugs 3.0.1 does not run on JDK 21 either. It is bound to a
+		     later step than "package", so only "mvn install" reaches it. -->
+		<findbugs.skip>true</findbugs.skip>
+	</properties>
 
 	<developers>
 		<developer>
@@ -54,6 +79,36 @@
 	</pluginRepositories>
 
 	<dependencies>
+		<!-- Jenkins 2.579 removed Apache Commons Lang 2 from core, so the
+		     plugin has to carry its own copy of the library it uses.
+		     This bundles Commons Lang 3 into the .hpi file.
+		     The version matches the commons-lang3 API plugin on our server. -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.20.0</version>
+		</dependency>
+
+		<!-- These two tools build the annotation index files under
+		     META-INF/annotations while the plugin compiles. The versions that
+		     come with the old Jenkins core cannot run on JDK 9 or newer and
+		     stop the build with NoSuchFileException. Jenkins supplies both at
+		     run time, so they are not shipped in the .hpi and only the build
+		     uses these newer copies. -->
+		<dependency>
+			<groupId>org.jenkins-ci</groupId>
+			<artifactId>annotation-indexer</artifactId>
+			<version>1.213.v92788b_1f0a_21</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>net.java.sezpoz</groupId>
+			<artifactId>sezpoz</artifactId>
+			<version>1.17</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
@@ -93,6 +148,48 @@
 			</resource>
 		</resources>
 		<plugins>
+			<!-- Commons Lang 3 ships one Java 9 class for module support, and the
+			     bytecode check in the parent pom rejects the whole library for it.
+			     That class is never loaded on Java 8, so skip the check for it.
+			     The override pattern below is the one the parent pom documents. -->
+			<plugin>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>display-info</id>
+						<configuration>
+							<rules>
+								<enforceBytecodeVersion>
+									<maxJdkVersion>1.${java.level}</maxJdkVersion>
+									<ignoredScopes>
+										<ignoredScope>test</ignoredScope>
+									</ignoredScopes>
+									<excludes combine.children="append">
+										<exclude>org.apache.commons:commons-lang3</exclude>
+										<exclude>org.jenkins-ci:annotation-indexer</exclude>
+										<exclude>net.java.sezpoz:sezpoz</exclude>
+									</excludes>
+								</enforceBytecodeVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- This step only writes a list of the licenses of our dependencies
+			     into the plugin file. It runs on Groovy 1.6 from 2009, which
+			     cannot start on JDK 21, so the build dies with
+			     ExceptionInInitializerError. Nothing at run time reads that
+			     list, so the step is turned off by giving it no phase. -->
+			<plugin>
+				<groupId>com.cloudbees</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.jenkins-ci.tools</groupId>
 				<artifactId>maven-hpi-plugin</artifactId>

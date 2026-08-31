@@ -3,7 +3,7 @@ package org.jenkinsci.plugins.coordinator.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.plugins.coordinator.model.TreeNode;
 import org.jenkinsci.plugins.coordinator.model.TreeNode.State;
 
