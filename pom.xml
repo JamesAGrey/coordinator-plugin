@@ -10,7 +10,7 @@
 
 	<artifactId>coordinator</artifactId>
 	<packaging>hpi</packaging>
-	<version>1.5.1-SNAPSHOT</version>
+	<version>1.5.2-SNAPSHOT</version>
 	<name>Coordinator Plugin</name>
 	<url>https://wiki.jenkins-ci.org/display/JENKINS/Coordinator</url>
 
